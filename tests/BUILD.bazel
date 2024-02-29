@@ -1,0 +1,5 @@
+cc_test(
+    name = "tests",
+    srcs = glob(["*.cpp"]),
+    deps = ["//kwargspp", "@catch2//:catch2_main"],
+)

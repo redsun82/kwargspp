@@ -1,0 +1,17 @@
+module(
+    name = "confpp",
+    version = "0.0.1",
+)
+
+bazel_dep(name = "catch2", version = "3.5.2", dev_dependency = True)
+bazel_dep(name = "fmt", version = "10.2.1")
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "trompeloeil",
+    integrity = "sha256-Sh15JgweSeBl7+CBfIuWRgmLon7tGAKww7p9lZ5OXoQ=",
+    urls = ["https://github.com/rollbear/trompeloeil/archive/refs/tags/v47.tar.gz"],
+    strip_prefix = "trompeloeil-47",
+    build_file_content = "cc_library(name = 'trompeloeil', hdrs = glob(['include/**/*.hpp']), includes=['include'], visibility = ['//visibility:public'])",
+)

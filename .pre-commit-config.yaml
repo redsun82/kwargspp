@@ -1,0 +1,20 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-yaml
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: v17.0.6
+  hooks:
+  - id: clang-format
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.12.0
+  hooks:
+  - id: pretty-format-yaml
+    args: [--autofix, --indent, '2']
+- repo: https://github.com/jlebar/pre-commit-hooks.git
+  rev: f2d115a052860b09b2888b4f104be614bf3b4779
+  hooks:
+  - id: bazel-buildifier
