@@ -1,6 +1,6 @@
 cc_library(
     name = "kwargspp",
     hdrs = glob(["**/*.hpp"]),
-    visibility = ["//visibility:public"],
     includes = ["."],
+    visibility = ["//visibility:public"],
 )

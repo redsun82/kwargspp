@@ -7,8 +7,7 @@
 
 namespace kwargspp {
 
-template <typename Derived, typename RequiredType = void>
-struct keyword;
+template <typename Derived, typename RequiredType = void> struct keyword;
 
 template <typename T>
 concept UntypedKeyword = std::derived_from<T, keyword<T>>;
@@ -28,8 +27,7 @@ template <typename T>
 concept Keyword =
     TypedOrUntypedKeyword<std::remove_const_t<std::remove_reference_t<T>>>;
 
-template <Keyword Kw, typename T>
-struct keyword_parameter {
+template <Keyword Kw, typename T> struct keyword_parameter {
   using untyped_keyword_type = typename Kw::untyped_keyword_type;
   using keyword_type = Kw;
   using value_type = T &&;
@@ -49,17 +47,14 @@ concept KeywordParameter = requires {
 };
 
 namespace detail {
-template <typename T, typename RequiredType>
-struct type_rule_impl {
+template <typename T, typename RequiredType> struct type_rule_impl {
   static constexpr bool value = std::convertible_to<T &&, RequiredType &&>;
 };
 
-template <typename T>
-struct type_rule_impl<T, void> : std::true_type {};
-}  // namespace detail
+template <typename T> struct type_rule_impl<T, void> : std::true_type {};
+} // namespace detail
 
-template <typename Derived, typename RequiredType>
-struct keyword {
+template <typename Derived, typename RequiredType> struct keyword {
   using untyped_keyword_type = Derived;
   using keyword_type = keyword;
   using required_type = RequiredType;
@@ -101,14 +96,14 @@ template <KeywordSpec Kwarg, typename T>
 inline constexpr bool accepts_type =
     keyword_type_of<Kwarg>::template accepts_type<T>;
 
-#define KWARGSPP_KEYWORD(name)                            \
-  struct name##_type : ::kwargspp::keyword<name##_type> { \
-    using keyword<name##_type>::operator=;                \
-    using keyword<name##_type>::as;                       \
-    using keyword<name##_type>::keyword_type;             \
-    using keyword<name##_type>::required_type;            \
-    using keyword<name##_type>::has_required_type;        \
-  };                                                      \
+#define KWARGSPP_KEYWORD(name)                                                 \
+  struct name##_type : ::kwargspp::keyword<name##_type> {                      \
+    using keyword<name##_type>::operator=;                                     \
+    using keyword<name##_type>::as;                                            \
+    using keyword<name##_type>::keyword_type;                                  \
+    using keyword<name##_type>::required_type;                                 \
+    using keyword<name##_type>::has_required_type;                             \
+  };                                                                           \
   constexpr name##_type name {}
 
 #define KWARGSPP_KEYWORD_SEMICOLON(name) KWARGSPP_KEYWORD(name);
@@ -121,13 +116,13 @@ inline constexpr bool accepts_type =
 #define EXPAND2(...) EXPAND1(EXPAND1(EXPAND1(EXPAND1(__VA_ARGS__))))
 #define EXPAND1(...) __VA_ARGS__
 
-#define FOR_EACH(macro, ...) \
+#define FOR_EACH(macro, ...)                                                   \
   __VA_OPT__(EXPAND(FOR_EACH_HELPER(macro, __VA_ARGS__)))
-#define FOR_EACH_HELPER(macro, a1, ...) \
+#define FOR_EACH_HELPER(macro, a1, ...)                                        \
   macro(a1) __VA_OPT__(FOR_EACH_AGAIN PARENS(macro, __VA_ARGS__))
 #define FOR_EACH_AGAIN() FOR_EACH_HELPER
 
-#define KWARGSPP_KEYWORDS(...) \
+#define KWARGSPP_KEYWORDS(...)                                                 \
   FOR_EACH(KWARGSPP_KEYWORD_SEMICOLON, __VA_ARGS__) static_assert(true)
 
 namespace detail {
@@ -183,7 +178,7 @@ decltype(auto) get(Kw &&kw, Kwargs &&...kwargs) {
     }
   }
 }
-}  // namespace detail
+} // namespace detail
 
 template <KeywordSpec... Kws> struct sig {
   std::tuple<Kws &&...> keywords;
@@ -329,4 +324,4 @@ template <KeywordSpec... Kws> sig(Kws &&...) -> sig<Kws...>;
 //   return detail::SignatureBuilder<KwOrKwargs...>::create(
 //       std::forward<KwOrKwargs>(kwargs)...);
 // }
-}  // namespace kwargspp
+} // namespace kwargspp
